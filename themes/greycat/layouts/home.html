@@ -1,0 +1,22 @@
+{{ define "main" }}
+  <!-- Fullscreen Banner / Slideshow -->
+  <section class="hero">
+    <div class="slides">
+      <div class="slide" style="background-image: url('{{ "images/slide1.jpg" | relURL }}');"></div>
+      <div class="slide" style="background-image: url('{{ "images/slide2.jpg" | relURL }}');"></div>
+    </div>
+  </section>
+
+  <!-- Recent Blog Posts -->
+  <section class="recent-posts">
+    <h2>Latest from the Blog</h2>
+    <ul>
+      {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
+        <li>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <p>{{ .Summary }}</p>
+        </li>
+      {{ end }}
+    </ul>
+  </section>
+{{ end }}
