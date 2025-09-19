@@ -1,22 +1,28 @@
 {{ define "main" }}
   <!-- Fullscreen Banner / Slideshow -->
   <section class="hero">
-    <div class="slides">
-      <div class="slide" style="background-image: url('{{ "images/slide1.jpg" | relURL }}');"></div>
-      <div class="slide" style="background-image: url('{{ "images/slide2.jpg" | relURL }}');"></div>
+    {{ $slides := .Site.GetPage "slides/homepage" }}
+    {{ range $slides.Params.slides }}
+    <div class="slide" style="background-image: url('{{ .image | relURL }}')">
+      <div class="overlay">
+        <h1>{{ .subtitle }}</h1>
+      </div>
     </div>
+    {{ end }}
   </section>
 
   <!-- Recent Blog Posts -->
   <section class="recent-posts">
+    <div class="container">
     <h2>Latest from the Blog</h2>
     <ul>
-      {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
-        <li>
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-          <p>{{ .Summary }}</p>
-        </li>
-      {{ end }}
-    </ul>
+        {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
+          <li>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <p>{{ .Summary }}</p>
+          </li>
+        {{ end }}
+      </ul>
+   </div> 
   </section>
 {{ end }}

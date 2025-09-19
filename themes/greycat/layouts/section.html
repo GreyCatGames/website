@@ -1,8 +1,40 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
-  {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-    {{ .Summary }}
-  {{ end }}
+<section class="blog-timeline-page">
+  <div class="container">
+    <!-- Main content -->
+    <div class="blog-content">
+      {{ $currentMonth := "" }}
+      {{ range $i, $p := sort .Pages "Date" "desc" }}
+        {{ $month := $p.Date.Format "Jan 2006" }}
+        {{ if ne $month $currentMonth }}
+          <div id="month-{{ $month | urlize }}" class="month-anchor"></div>
+          {{ $currentMonth = $month }}
+        {{ end }}
+        <article class="blog-post" id="post-{{ $i }}">
+          <h2><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+          <time>{{ $p.Date.Format "Jan 2, 2006" }}</time>
+          <p>{{ $p.Summary }}</p>
+        </article>
+      {{ end }}
+    </div>
+
+    <!-- Sidebar timeline 
+    <aside class="timeline-sidebar">
+      <div class="timeline-line"></div>
+      <ul class="timeline-months">
+        {{ $months := slice }}
+        {{ range .Pages }}
+          {{ $month := .Date.Format "Jan 2006" }}
+          {{ if not (in $months $month) }}
+            {{ $months = $months | append $month }}
+          {{ end }}
+        {{ end }}
+        {{ range $months }}
+          <li><a href="#month-{{ . | urlize }}">{{ . }}</a></li>
+        {{ end }}
+      </ul>
+      <div class="timeline-dot" id="timeline-dot"></div>
+    </aside>-->
+  </div>
+</section>
 {{ end }}

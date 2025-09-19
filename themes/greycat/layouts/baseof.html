@@ -7,9 +7,11 @@
   <header>
     {{ partial "header.html" . }}
   </header>
-  <main>
+
+  <main class="flex-main">
     {{ block "main" . }}{{ end }}
   </main>
+
   <footer>
     {{ partial "footer.html" . }}
   </footer>
