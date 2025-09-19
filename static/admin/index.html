@@ -15,8 +15,8 @@
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         const auth0 = await createAuth0Client({
-            domain: "YOUR_AUTH0_DOMAIN",      // e.g. dev-abc123.us.auth0.com
-            client_id: "YOUR_AUTH0_CLIENT_ID" // from your Auth0 app
+            domain: "{{ getenv "AUTH0_DOMAIN" }}",
+            client_id: "{{ getenv "AUTH0_CLIENT_ID" }}"
         });
 
         // If returning from Auth0
