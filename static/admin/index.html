@@ -6,7 +6,9 @@
     <title>Content Manager</title>
 </head>
 <body>
-<!-- Decap CMS (formerly Netlify CMS) -->
+<h1 style="text-align:center;margin-top:2rem;">Content Manager Login</h1>
+
+<!-- Decap CMS -->
 <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
 <!-- Auth0 SDK -->
@@ -14,14 +16,15 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        // Initialize Auth0 client
         const auth0 = await createAuth0Client({
             domain: "{{ getenv "AUTH0_DOMAIN" }}",
-            client_id: "{{ getenv "AUTH0_CLIENT_ID" }}"
+            client_id: "{{ getenv "AUTH0_CLIENT_ID" }}",
+            redirect_uri: window.location.origin + "/admin/"
         });
 
-        // If returning from Auth0
-        if (window.location.search.includes("code=") &&
-            window.location.search.includes("state=")) {
+        // Handle redirect after login
+        if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
             await auth0.handleRedirectCallback();
             window.history.replaceState({}, document.title, "/admin/");
         }
@@ -29,16 +32,26 @@
         const isAuthenticated = await auth0.isAuthenticated();
 
         if (!isAuthenticated) {
-            // redirect to Auth0 login
-            await auth0.loginWithRedirect({
-                redirect_uri: window.location.origin + "/admin/"
-            });
+            // Redirect to Auth0 login page
+            await auth0.loginWithRedirect();
+            return;
         }
 
-        // User is authenticated → init CMS
-        if (isAuthenticated) {
-            CMS.init();
-        }
+        // User is authenticated, now init CMS
+        const token = await auth0.getTokenSilently();
+        window.CMS_USER_TOKEN = token;
+
+        CMS.init({
+            config: {
+                backend: {
+                    name: "git-gateway",
+                    branch: "main",
+                    auth_scope: "repo",
+                },
+                media_folder: "static/images/uploads",
+                public_folder: "/images/uploads",
+            }
+        });
     });
 </script>
 </body>
