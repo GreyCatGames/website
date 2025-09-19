@@ -1,5 +1,5 @@
 backend:
-  name: github
+  name: git-gateway
   repo: GreyCatGames/website
   branch: main
   auth_endpoint: "/.netlify/identity"
