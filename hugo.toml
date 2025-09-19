@@ -6,6 +6,7 @@ theme = "greycat"
 favicon = "/images/favicon.ico"
 
 [params]
+uglyURLs = true
 
 [menu]
 [[menu.main]]
