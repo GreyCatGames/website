@@ -6,20 +6,40 @@
     <title>Content Manager</title>
 </head>
 <body>
-<!-- Include the script that builds the page and powers Netlify CMS -->
-<script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<!-- Decap CMS (formerly Netlify CMS) -->
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<!-- Auth0 SDK -->
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 
 <script>
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-            if (!user) {
-                window.netlifyIdentity.on("login", () => {
-                    document.location.href = "/admin/";
-                });
-            }
+    document.addEventListener("DOMContentLoaded", async () => {
+        const auth0 = await createAuth0Client({
+            domain: "YOUR_AUTH0_DOMAIN",      // e.g. dev-abc123.us.auth0.com
+            client_id: "YOUR_AUTH0_CLIENT_ID" // from your Auth0 app
         });
-    }
+
+        // If returning from Auth0
+        if (window.location.search.includes("code=") &&
+            window.location.search.includes("state=")) {
+            await auth0.handleRedirectCallback();
+            window.history.replaceState({}, document.title, "/admin/");
+        }
+
+        const isAuthenticated = await auth0.isAuthenticated();
+
+        if (!isAuthenticated) {
+            // redirect to Auth0 login
+            await auth0.loginWithRedirect({
+                redirect_uri: window.location.origin + "/admin/"
+            });
+        }
+
+        // User is authenticated → init CMS
+        if (isAuthenticated) {
+            CMS.init();
+        }
+    });
 </script>
 </body>
 </html>
