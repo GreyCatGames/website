@@ -1,8 +1,10 @@
+{{- $env := getenv "HUGO_ENV" | default "production" }}
 {{- with resources.Get "css/main.css" }}
-  {{ $env := getenv "HUGO_ENV" | default "production" }}
-    {{ if eq $env "development" }}
-      <link rel="stylesheet" href="/css/main.css">
-    {{ else }}
-      <link rel="stylesheet" href="/css/main.min.css">
-    {{ end }}
+  {{- if eq $env "development" }}
+    <link rel="stylesheet" href="/css/main.css">
+  {{- else }}
+    {{- with . | minify | fingerprint }}
+      <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+    {{- end }}
+  {{- end }}
 {{- end }}
