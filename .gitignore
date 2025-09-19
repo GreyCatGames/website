@@ -2,9 +2,6 @@
 /public/
 /resources/_gen/
 
-# Netlify CMS admin/editor build 
-/static/admin/
-
 # Hugo cache
 /.hugo_build.lock
 /hugo_cache/
