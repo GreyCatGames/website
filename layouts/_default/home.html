@@ -3,7 +3,8 @@
 <section class="hero">
   <div class="slides">
     {{ range .Params.slides }}
-    <div class="slide" style="background-image: url('{{ .image | relURL }}');">
+    <div class="slide">
+      <div class="slide-bg" style="background-image: url('{{ .image | relURL }}');"></div>
       <div class="slide-text">
         <h2>{{ .subtitle }}</h2>
       </div>

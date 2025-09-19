@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="author-page container">
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Params.job }}</p>
+    <p>{{ .Params.bio }}</p>
+
+    {{ if .Params.socials }}
+    <ul class="author-socials">
+        {{ range $key, $val := .Params.socials }}
+        <li><a href="{{ $val }}" target="_blank">{{ $key | title }}</a></li>
+        {{ end }}
+    </ul>
+    {{ end }}
+
+    <h2>Posts by {{ .Title }}</h2>
+    <ul>
+        {{ range where .Site.RegularPages "Params.author" .File.BaseFileName }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{ end }}
+    </ul>
+</div>
+{{ end }}

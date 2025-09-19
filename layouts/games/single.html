@@ -1,0 +1,32 @@
+{{ define "main" }}
+<section class="game-page container">
+  <h1>{{ .Title }}</h1>
+  <p>{{ .Params.summary }}</p>
+
+  <!-- Slideshow -->
+  <div class="game-slideshow">
+    {{ range .Params.screenshots }}
+    <div class="slide" style="background-image: url('{{ . | relURL }}');"></div>
+    {{ end }}
+  </div>
+
+  <!-- Platforms -->
+  <div class="game-platforms">
+    {{ range .Params.platforms }}
+    <a href="{{ .link }}" target="_blank">
+      <img src="{{ .icon | relURL }}" alt="{{ .name }}" title="{{ .name }}">
+    </a>
+    {{ end }}
+  </div>
+
+  <!-- Related blog posts -->
+  <section class="game-blog-posts">
+    <h2>Related Blog Posts</h2>
+    <ul>
+      {{ range where .Site.RegularPages "Params.game" .File.BaseFileName }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </section>
+</section>
+{{ end }}

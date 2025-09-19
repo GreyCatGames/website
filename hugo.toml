@@ -3,6 +3,9 @@ baseURL = 'http://localhost:1313'
 languageCode = 'en-us'
 title = 'Grey Cat Games'
 theme = "greycat"
+favicon = "static/images/favicon.ico"
+
+[params]
 
 [menu]
   [[menu.main]]

@@ -1,0 +1,29 @@
+{{ define "main" }}
+<section class="games-list container">
+    <h1>Our Games</h1>
+    <ul>
+        {{ range .Pages }}
+        <li class="game-card">
+            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            <p>{{ .Params.summary }}</p>
+
+            <!-- Screenshot slideshow -->
+            <div class="game-slideshow">
+                {{ range .Params.screenshots }}
+                <div class="slide" style="background-image: url('{{ . | relURL }}');"></div>
+                {{ end }}
+            </div>
+
+            <!-- Platform icons -->
+            <div class="game-platforms">
+                {{ range .Params.platforms }}
+                <a href="{{ .link }}" target="_blank">
+                    <img src="{{ .icon | relURL }}" alt="{{ .name }}" title="{{ .name }}">
+                </a>
+                {{ end }}
+            </div>
+        </li>
+        {{ end }}
+    </ul>
+</section>
+{{ end }}
