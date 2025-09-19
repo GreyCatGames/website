@@ -3,7 +3,7 @@ baseURL = 'https://greycatgames.com'
 languageCode = 'en-us'
 title = 'Grey Cat Games'
 theme = "greycat"
-favicon = "static/images/favicon.ico"
+favicon = "/images/favicon.ico"
 
 [params]
 
