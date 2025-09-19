@@ -1,13 +1,16 @@
 #baseURL = 'http://localhost:1313'
-baseURL = 'https://greycatgames.com'
+baseURL = 'https://greycatgames.com/'
 languageCode = 'en-us'
 title = 'Grey Cat Games'
 theme = "greycat"
-favicon = "/images/favicon.ico"
 
 [params]
-uglyURLs = true
+favicon = "/images/favicon.ico"
 
+description = "Grey Cat Games - Indie games studio based in Portsmouth, UK"
+keywords = ["indie games", "video games", "Grey Cat Games", "Hugo", "game development", "game dev"]
+
+# Menu
 [menu]
 [[menu.main]]
 name = "Home"
@@ -25,3 +28,6 @@ weight = 3
 name = "Contact"
 url = "/contact/"
 weight = 4
+
+relativeURLs = true
+canonifyURLs = true
