@@ -1,0 +1,54 @@
+backend:
+  name: "git-gateway"
+  branch: "main"
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Author", name: "author", widget: "relation", collection: "authors", search_fields: [ "name" ], value_field: "name" }
+      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - name: "slides"
+        label: "Slides"
+        widget: "list"
+        fields:
+          - { label: "Image", name: "image", widget: "image" }
+          - { label: "Subtitle", name: "subtitle", widget: "string" }
+
+  - name: "authors"
+    label: "Authors"
+    folder: "content/authors"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Job", name: "job", widget: "string" }
+      - { label: "Avatar", name: "avatar", widget: "image" }
+
+  - name: "games"
+    label: "Games"
+    folder: "content/games"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - name: "Images"
+        label: "Images"
+        widget: "list"
+        fields:
+          - { label: "Image", name: "image", widget: "image" }
+      - name: "Platforms"
+        label: "Platforms"
+        widget: "list"
+        fields:
+          - { label: "Platform Image", name: "icon", widget: "image" }

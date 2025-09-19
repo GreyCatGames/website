@@ -1,0 +1,1 @@
+(()=>{document.addEventListener("DOMContentLoaded",function(){let t=document.querySelectorAll(".hero .slide");if(!t.length)return;let e=0;function n(o){t.forEach((c,i)=>c.classList.toggle("active",i===o))}function l(){e=(e+1)%t.length,n(e)}n(e),setInterval(l,5e3)});})();
