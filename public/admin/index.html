@@ -1,31 +1,89 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>CMS</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Content Manager</title>
 </head>
 <body>
-<h1>Login</h1>
+<h1>Login to CMS</h1>
 
-<!-- Decap CMS JS -->
-<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-<!-- Netlify Identity -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<!-- Include Netlify CMS -->
+<script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
 
 <script>
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.init();
-    }
-
+    // Initialize Netlify CMS with GitHub backend
     CMS.init({
         config: {
             backend: {
-                name: 'git-gateway',
-                branch: 'main'
+                name: 'github',
+                repo: 'GreyCatGames/website',
+                branch: 'main',
             },
             media_folder: 'static/images/uploads',
-            public_folder: '/images/uploads'
+            public_folder: '/images/uploads',
+            collections: [
+                {
+                    name: 'blog',
+                    label: 'Blog Posts',
+                    folder: 'content/blog',
+                    create: true,
+                    slug: '{{slug}}',
+                    fields: [
+                        {label: 'Title', name: 'title', widget: 'string'},
+                        {label: 'Date', name: 'date', widget: 'datetime'},
+                        {
+                            label: 'Author',
+                            name: 'author',
+                            widget: 'relation',
+                            collection: 'authors',
+                            search_fields: ['name'],
+                            value_field: 'name'
+                        },
+                        {label: 'Body', name: 'body', widget: 'markdown'},
+                        {label: 'Summary', name: 'summary', widget: 'text'},
+                    ],
+                },
+                {
+                    name: 'authors',
+                    label: 'Authors',
+                    folder: 'content/authors',
+                    create: true,
+                    slug: '{{slug}}',
+                    fields: [
+                        {label: 'Name', name: 'name', widget: 'string'},
+                        {label: 'Job', name: 'job', widget: 'string'},
+                        {label: 'Avatar', name: 'avatar', widget: 'image'},
+                    ],
+                },
+                {
+                    name: 'games',
+                    label: 'Games',
+                    folder: 'content/games',
+                    create: true,
+                    slug: '{{slug}}',
+                    fields: [
+                        {label: 'Title', name: 'title', widget: 'string'},
+                        {label: 'Description', name: 'description', widget: 'text'},
+                        {
+                            name: 'Images',
+                            label: 'Images',
+                            widget: 'list',
+                            fields: [
+                                {label: 'Image', name: 'image', widget: 'image'},
+                            ],
+                        },
+                        {
+                            name: 'Platforms',
+                            label: 'Platforms',
+                            widget: 'list',
+                            fields: [
+                                {label: 'Platform Image', name: 'icon', widget: 'image'},
+                            ],
+                        },
+                    ],
+                },
+            ],
         }
     });
 </script>
