@@ -10,48 +10,94 @@
 
 <!-- Decap CMS -->
 <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-<!-- Auth0 SDK -->
-<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<!-- Netlify Identity Widget -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        // Initialize Auth0 client
-        const auth0 = await createAuth0Client({
-            domain: "{{ getenv "AUTH0_DOMAIN" }}",
-            client_id: "{{ getenv "AUTH0_CLIENT_ID" }}",
-            redirect_uri: window.location.origin + "/admin/"
-        });
-
-        // Handle redirect after login
-        if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-            await auth0.handleRedirectCallback();
-            window.history.replaceState({}, document.title, "/admin/");
-        }
-
-        const isAuthenticated = await auth0.isAuthenticated();
-
-        if (!isAuthenticated) {
-            // Redirect to Auth0 login page
-            await auth0.loginWithRedirect();
-            return;
-        }
-
-        // User is authenticated, now init CMS
-        const token = await auth0.getTokenSilently();
-        window.CMS_USER_TOKEN = token;
-
-        CMS.init({
-            config: {
-                backend: {
-                    name: "git-gateway",
-                    branch: "main",
-                    auth_scope: "repo",
-                },
-                media_folder: "static/images/uploads",
-                public_folder: "/images/uploads",
+    // Initialize Netlify Identity
+    if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+            if (!user) {
+                window.netlifyIdentity.on("login", () => {
+                    document.location.href = "/admin/";
+                });
             }
         });
+        window.netlifyIdentity.init();
+    }
+
+    // Init Decap CMS
+    CMS.init({
+        config: {
+            backend: {
+                name: "git-gateway",
+                branch: "main",       // or your default branch
+            },
+            media_folder: "static/images/uploads",
+            public_folder: "/images/uploads",
+            collections: [
+                {
+                    name: "blog",
+                    label: "Blog Posts",
+                    folder: "content/blog",
+                    create: true,
+                    slug: "{{slug}}",
+                    fields: [
+                        {label: "Title", name: "title", widget: "string"},
+                        {label: "Date", name: "date", widget: "datetime"},
+                        {
+                            label: "Author",
+                            name: "author",
+                            widget: "relation",
+                            collection: "authors",
+                            search_fields: ["name"],
+                            value_field: "name"
+                        },
+                        {label: "Body", name: "body", widget: "markdown"},
+                        {label: "Summary", name: "summary", widget: "text"},
+                        {
+                            label: "Slides", name: "slides", widget: "list", fields: [
+                                {label: "Image", name: "image", widget: "image"},
+                                {label: "Subtitle", name: "subtitle", widget: "string"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "authors",
+                    label: "Authors",
+                    folder: "content/authors",
+                    create: true,
+                    slug: "{{slug}}",
+                    fields: [
+                        {label: "Name", name: "name", widget: "string"},
+                        {label: "Job", name: "job", widget: "string"},
+                        {label: "Avatar", name: "avatar", widget: "image"}
+                    ]
+                },
+                {
+                    name: "games",
+                    label: "Games",
+                    folder: "content/games",
+                    create: true,
+                    slug: "{{slug}}",
+                    fields: [
+                        {label: "Title", name: "title", widget: "string"},
+                        {label: "Description", name: "description", widget: "text"},
+                        {
+                            label: "Images", name: "images", widget: "list", fields: [
+                                {label: "Image", name: "image", widget: "image"}
+                            ]
+                        },
+                        {
+                            label: "Platforms", name: "platforms", widget: "list", fields: [
+                                {label: "Platform Image", name: "icon", widget: "image"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     });
 </script>
 </body>
